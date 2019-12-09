@@ -2,6 +2,7 @@ const AntdDayjsWebpackPlugin = require('antd-dayjs-webpack-plugin')
 const TerserPlugin = require('terser-webpack-plugin')
 const DefinePlugin = require('webpack').DefinePlugin
 const HtmlWebpackPlugin = require('html-webpack-plugin')
+const {CleanWebpackPlugin} = require('clean-webpack-plugin')
 const LessPluginCleanCSS = require('less-plugin-clean-css')
 const path = require('path')
 
@@ -18,6 +19,7 @@ const webpackPlugins = [
       }
     }
   }),
+  new CleanWebpackPlugin(),
   new HtmlWebpackPlugin({
     title: 'Starter Kit',
     template: path.resolve(__dirname, './template.ejs')
@@ -44,27 +46,23 @@ module.exports = {
         }}),
     ],
     splitChunks: {
-      chunks: 'all',
-      automaticNameDelimiter: '.',
       cacheGroups: {
-        extractComments: 'all',
         vendors: {
-          test: /\.js$/,
-          priority: 1
+          test: /[\\/]node_modules[\\/]/,
+          name: 'vendors',
+          chunks: 'all',
         }
       }
     },
-    runtimeChunk: {
-      name: entryPoint => `manifest.${entryPoint.name}`
-    }
+    runtimeChunk: 'single',
+    moduleIds: 'hashed',
   },
   context: path.resolve(__dirname, '../src'),
   entry: ["./index.js"],
   output: {
     path: path.resolve(__dirname, '../dist'),
     publicPath: '/',
-    filename: '[chunkhash].js',
-    sourceMapFilename: '[chunkhash].map'
+    filename: '[name].[contenthash].js'
   },
   devtool: __PROD__ ? '' : 'hidden-source-map',
   module: {
