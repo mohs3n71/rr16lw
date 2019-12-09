@@ -2,7 +2,6 @@ const AntdDayjsWebpackPlugin = require('antd-dayjs-webpack-plugin')
 const TerserPlugin = require('terser-webpack-plugin')
 const DefinePlugin = require('webpack').DefinePlugin
 const HtmlWebpackPlugin = require('html-webpack-plugin')
-const {CleanWebpackPlugin} = require('clean-webpack-plugin')
 const LessPluginCleanCSS = require('less-plugin-clean-css')
 const path = require('path')
 
@@ -19,7 +18,6 @@ const webpackPlugins = [
       }
     }
   }),
-  new CleanWebpackPlugin(),
   new HtmlWebpackPlugin({
     title: 'Starter Kit',
     template: path.resolve(__dirname, './template.ejs')
@@ -123,23 +121,18 @@ module.exports = {
         ]
       },
       {
-        test: /\.(jpg|png|gif|svg)$/,
-        loader: 'image-webpack-loader',
-        // Specify enforce: 'pre' to apply the loader
-        // before url-loader/svg-url-loader
-        // and not duplicate it in rules with them
-        enforce: 'pre',
-        options: {
-          disable: true
-        }
-      },
-      {
         test: /\.(png|jpe?g|gif)$/i,
-        use: [
+        use: ['file-loader',
           {
-            loader: 'file-loader',
-          },
-        ],
+            loader: 'image-webpack-loader',
+            options: {
+              disable: false,
+              mozjpeg: {
+                progressive: true,
+                quality: 65
+              }
+            }
+          }],
       }
     ]
   },
