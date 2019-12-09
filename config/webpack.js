@@ -1,5 +1,4 @@
 const AntdDayjsWebpackPlugin = require('antd-dayjs-webpack-plugin')
-//const BrotliPlugin = require('brotli-webpack-plugin')
 const TerserPlugin = require('terser-webpack-plugin')
 const DefinePlugin = require('webpack').DefinePlugin
 const HtmlWebpackPlugin = require('html-webpack-plugin')
@@ -24,14 +23,6 @@ const webpackPlugins = [
     template: path.resolve(__dirname, './template.ejs')
   }),
   new AntdDayjsWebpackPlugin(),
-    /*
-  new BrotliPlugin({
-    asset: '[path].br[query]',
-    test: /\.(js|css|html|svg)$/,
-    threshold: 10240,
-    minRatio: 0.8
-  })
-     */
 ]
 
 const lessPlugins = [
@@ -45,12 +36,12 @@ module.exports = {
   optimization: {
     minimize: __PROD__,
     minimizer: [
-        new TerserPlugin({
-          cache: true,
-          parallel: true,
-          sourceMap: true,
-          terserOptions: {
-          }}),
+      new TerserPlugin({
+        cache: true,
+        parallel: true,
+        sourceMap: true,
+        terserOptions: {
+        }}),
     ],
     splitChunks: {
       chunks: 'all',
@@ -68,7 +59,7 @@ module.exports = {
     }
   },
   context: path.resolve(__dirname, '../src'),
-  entry: ["./app.js"],
+  entry: ["./index.js"],
   output: {
     path: path.resolve(__dirname, '../dist'),
     publicPath: '/',
@@ -106,6 +97,51 @@ module.exports = {
             }
           }
         ]
+      },
+      {
+        test: /\.svg(\?v=\d+\.\d+\.\d+)?$/,
+        use: [
+          {
+            loader: 'babel-loader',
+          },
+          {
+            loader: '@svgr/webpack',
+            options: {
+              babel: false,
+              icon: true,
+            },
+          },
+        ],
+      },
+      {
+        test: /\.css$/,
+        use: [
+          {
+            loader: 'style-loader'
+          },
+          {
+            loader: 'css-loader'
+          }
+        ]
+      },
+      {
+        test: /\.(jpg|png|gif|svg)$/,
+        loader: 'image-webpack-loader',
+        // Specify enforce: 'pre' to apply the loader
+        // before url-loader/svg-url-loader
+        // and not duplicate it in rules with them
+        enforce: 'pre',
+        options: {
+          disable: true
+        }
+      },
+      {
+        test: /\.(png|jpe?g|gif)$/i,
+        use: [
+          {
+            loader: 'file-loader',
+          },
+        ],
       }
     ]
   },
