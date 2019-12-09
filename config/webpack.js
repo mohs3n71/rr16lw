@@ -58,7 +58,7 @@ module.exports = {
       cacheGroups: {
         extractComments: 'all',
         vendors: {
-          test: /[\/]node_modules[\/]/,
+          test: /\.js$/,
           priority: 1
         }
       }
