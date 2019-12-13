@@ -9,7 +9,7 @@ const appReducer = combineReducers({
 })
 
 export default (state, action) => {
-  if (action.type === LOGOUT_SUCCESS || action.type === LOGOUT_ERROR) {
+  if(action.type === LOGOUT_SUCCESS || action.type === LOGOUT_ERROR) {
     state = undefined
   }
   return appReducer(state, action)

@@ -12,8 +12,8 @@ export const initAuthState = fromJS({
   server: null
 })
 
-export function authReducer (state = initAuthState, action) {
-  switch (action.type) {
+export function authReducer(state = initAuthState, action) {
+  switch(action.type) {
     case LOGIN:
     case LOGOUT:
       return state

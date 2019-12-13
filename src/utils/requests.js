@@ -9,7 +9,7 @@ import omitBy from 'lodash/omitBy'
 
 import {getTimestamp} from './moments'
 
-export function makeRequest (method, authToken, url, data, params = undefined) {
+export function makeRequest(method, authToken, url, data, params = undefined) {
   return axios({
     method,
     url,
@@ -23,17 +23,17 @@ export function makeRequest (method, authToken, url, data, params = undefined) {
   })
 }
 
-export function multipartRequest (authToken, url, config, logo,
-  resource = undefined) {
+export function multipartRequest(authToken, url, config, logo,
+                                 resource = undefined) {
   let formData = new FormData()
-  if (isObject(config)) {
+  if(isObject(config)) {
     let blob = new Blob([JSON.stringify(config)], {type: 'application/json'})
     formData.append('config', blob)
   }
-  if (logo !== null) {
+  if(logo !== null) {
     formData.append('logo', logo)
   }
-  if (resource !== null) {
+  if(resource !== null) {
     formData.append('resource', resource)
   }
 
@@ -46,7 +46,7 @@ export function multipartRequest (authToken, url, config, logo,
   })
 }
 
-export function noJson (authToken, url, state) {
+export function noJson(authToken, url, state) {
   return axios.put(url, `"${state}"`, {
     headers: {
       'AuthToken': authToken,
@@ -56,7 +56,7 @@ export function noJson (authToken, url, state) {
   })
 }
 
-export function processData (data, schema) {
+export function processData(data, schema) {
   const clonedData = cloneDeep(data)
   const clonedSchema = cloneDeep(schema)
 

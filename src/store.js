@@ -10,11 +10,11 @@ import sagas from './sagas'
 import isObject from 'lodash/isObject'
 import isFunction from 'lodash/isFunction'
 
-export function getCompose (bom, environment) {
-  if (isObject(bom) && environment === 'development') {
+export function getCompose(bom, environment) {
+  if(isObject(bom) && environment === 'development') {
     const extensionCompose = bom.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__
 
-    if (isFunction(extensionCompose)) {
+    if(isFunction(extensionCompose)) {
       return extensionCompose
     }
   }
@@ -22,11 +22,11 @@ export function getCompose (bom, environment) {
   return compose
 }
 
-export function purgeFetchingStateFilter (state) {
+export function purgeFetchingStateFilter(state) {
   state.forEach((value, key) => {
-    if (Map.isMap(value)) {
+    if(Map.isMap(value)) {
       value = value.map((value, key) => {
-        switch (key) {
+        switch(key) {
           case 'success':
             return false
           case 'error':
@@ -45,7 +45,7 @@ export function purgeFetchingStateFilter (state) {
   return state
 }
 
-export default function initiateStore (initialState = {}, history) {
+export default function initiateStore(initialState = {}, history) {
   const sagaMiddleware = sagaMiddlewareFactory()
 
   const middleware = applyMiddleware(

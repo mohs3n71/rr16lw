@@ -3,9 +3,8 @@ import map from 'lodash/map'
 
 import auth from './auth'
 
-
-export default function * sagas () {
+export default function* sagas() {
   yield all(map([
-    ...auth,
+    ...auth
   ], (saga) => fork(saga)))
 }

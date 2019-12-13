@@ -7,7 +7,7 @@ import {
 } from '../actions/auth'
 import {makeRequest} from '../utils/requests'
 
-export function * login ({payload}) {
+export function* login({payload}) {
   const {username, password, server} = payload
   const url = `${server}/admin/login.json`
   const data = {
@@ -17,17 +17,17 @@ export function * login ({payload}) {
   try {
     const response = yield call(makeRequest, 'POST', undefined, url, data)
     yield put(loginSuccess(response.data, server))
-  } catch (error) {
+  } catch(error) {
     const status = error.response ? error.response.status : 500
     yield put(loginError({status}))
   }
 }
 
-export function * loginSaga () {
+export function* loginSaga() {
   yield takeLatest(LOGIN, login)
 }
 
-export function * logout () {
+export function* logout() {
   const server = yield select(authServerSelector())
   const {authToken} = yield select(authDataSelector())
   const url = `${server}/admin/logout.json`
@@ -35,13 +35,13 @@ export function * logout () {
   try {
     yield call(makeRequest, 'DELETE', authToken, url)
     yield put(logoutSuccess())
-  } catch (error) {
+  } catch(error) {
     const status = error.response ? error.response.status : 500
     yield put(logoutError({status}))
   }
 }
 
-export function * logoutSaga () {
+export function* logoutSaga() {
   yield takeLatest(LOGOUT, logout)
 }
 
