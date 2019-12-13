@@ -1,4 +1,3 @@
-const AntdDayjsWebpackPlugin = require('antd-dayjs-webpack-plugin')
 const TerserPlugin = require('terser-webpack-plugin')
 const DefinePlugin = require('webpack').DefinePlugin
 const HtmlWebpackPlugin = require('html-webpack-plugin')
@@ -21,8 +20,7 @@ const webpackPlugins = [
   new HtmlWebpackPlugin({
     title: 'Starter Kit',
     template: path.resolve(__dirname, './template.ejs')
-  }),
-  new AntdDayjsWebpackPlugin(),
+  })
 ]
 
 const lessPlugins = [
@@ -32,6 +30,11 @@ const lessPlugins = [
 ]
 
 module.exports = {
+  devServer: {
+    contentBase: path.join(__dirname, 'dist'),
+    compress: false,
+    port: 9000,
+  },
   mode: process.env.NODE_ENV,
   optimization: {
     minimize: __PROD__,
@@ -60,7 +63,7 @@ module.exports = {
   output: {
     path: path.resolve(__dirname, '../dist'),
     publicPath: '/',
-    filename: '[name].[contenthash].js'
+    filename: '[name].[chunkhash].js'
   },
   devtool: __PROD__ ? '' : 'hidden-source-map',
   module: {

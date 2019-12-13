@@ -1,22 +1,23 @@
 import React from 'react'
-import {render} from 'react-dom'
-import {Provider as StoreProvider} from 'react-redux'
-import {Router, Switch, Route} from 'react-router'
-import {createBrowserHistory} from 'history'
-import {setLocale} from './utils/moments'
+import { render } from 'react-dom'
+import { Provider as StoreProvider } from 'react-redux'
+import { Router, Switch, Route, Redirect } from 'react-router'
+import { createBrowserHistory } from 'history'
+import { setLocale } from './utils/moments'
 
-import {IntlProvider} from 'react-intl'
+import { IntlProvider } from 'react-intl'
 import head from 'lodash/head'
-import {ConfigProvider} from 'antd'
-import enUSLocaleProvider from 'antd/lib/locale-provider/en_US'
-import faLocaleProvider from 'antd/lib/locale-provider/fa_IR'
+import { create } from 'jss';
+import rtl from 'jss-rtl';
+import { StylesProvider, jssPreset } from '@material-ui/core/styles';
 
-import {ThemeProvider} from 'styled-components'
-import 'antd/dist/antd.less'
+import { createMuiTheme, ThemeProvider } from '@material-ui/core/styles';
 
 import toLower from 'lodash/toLower'
 
 import initiateStore from './store'
+
+import Dashboard from '../src/routes/Dashboard'
 
 const history = createBrowserHistory()
 const store = initiateStore(window.__INITIAL_STATE__, history)
@@ -27,32 +28,37 @@ switch (navigator.language) {
     case 'en-US':
         locale = {
             code: navigator.language,
-            antd: enUSLocaleProvider
         }
         break
     default:
         locale = {
             code: 'fa-IR',
-            antd: faLocaleProvider
         }
 }
+
+const theme = createMuiTheme({
+    direction: 'rtl', // Both here and <body dir="rtl">
+});
+
+// Configure JSS
+const jss = create({ plugins: [...jssPreset().plugins, rtl()] });
 
 setLocale(toLower(locale.code))
 head(document.getElementsByTagName('html')).setAttribute('lang', locale.code)
 
-
 render(
     <StoreProvider store={store}>
         <IntlProvider locale={locale.code} messages={locale.messages}>
-            <ConfigProvider locale={locale.antd}>
-                <ThemeProvider theme={process.env.THEME}>
+            <ThemeProvider theme={theme}>
+                <StylesProvider jss={jss}>
                     <Router history={history}>
                         <Switch>
-
+                            <Redirect exact={true} from='/' to='/dashboard' />
+                            <Route path='/dashboard' component={Dashboard} />
                         </Switch>
                     </Router>
-                </ThemeProvider>
-            </ConfigProvider>
+                </StylesProvider>
+            </ThemeProvider>
         </IntlProvider>
     </StoreProvider>,
     document.getElementById('content')
